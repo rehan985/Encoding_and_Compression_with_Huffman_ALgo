@@ -300,8 +300,6 @@ public:
 		}
 	}
 
-
-
 	int isLeaf(HMnode* root) {
 		return !(root->left) && !(root->right);
 	}
@@ -373,7 +371,19 @@ string getfile()
 	file.close();
 	cout << endl;
 
+	file.close();
+
 	return text_of_file;
+}
+
+void create_encrypted_file(string encrypted)
+{
+	cout << endl;
+	cout << "YOUR FILE HAS BEEN SUCCESSFULLY ENCRYPTED ";
+	cout << endl;
+	ofstream myfile("encrypted_file.txt");
+	myfile << encrypted;
+	myfile.close();
 }
 
 void frequency_calculator(string text_of_file)
@@ -417,7 +427,7 @@ string space_remover(string textof_file)
 
 }
 
-string encryption(string text, int key)
+string encryption(string unencrypted_text, int key)
 {
 
 	cout << endl;
@@ -432,16 +442,29 @@ string encryption(string text, int key)
 	Sleep(5000);
 	cout << endl;
 
-	char* text1;
-	text1 = new char[text.length()];
+	char* encrypted_text;
+	encrypted_text = new char[unencrypted_text.length()];
 
-	for (int i = 0; i < text.length(); i++)
+	for (int i = 0; i < unencrypted_text.length(); i++)
 	{
-		text1[i] = text[i] + key;
+		encrypted_text[i] = unencrypted_text[i] + key;
 	}
 	cout << endl;
-	cout << text1;
-	return text1;
+	//cout << encrypted_text;
+	return encrypted_text;
+}
+
+string decrption(string encrypted_text,int key)
+{
+	char* unencrypted_text;
+	unencrypted_text = new char[encrypted_text.length()];
+
+	for (int i = 0; i < encrypted_text.length(); i++)
+	{
+		unencrypted_text[i] = encrypted_text[i] - key;
+	}
+	cout << endl;
+	return unencrypted_text;
 }
 
 void header()
@@ -469,12 +492,39 @@ int main()
 	HMnode* temp12;
 	HMnode* temp123;
 	string textof_file;
+	string encrypted;
+	string dencrypted;
+
 	int key;
+	char user;
+
 	header();
 	textof_file = getfile();
+
 	cout << "Enter the key for Encrypting the data ";
 	cin >> key;
-	encryption(textof_file, key);
+	encrypted=encryption(textof_file, key);
+	create_encrypted_file(encrypted);
+
+	cout << "Want to decrypt your file ? . press y  ";
+	cin >> user;
+	if (user == 'y' || user=='Y')
+	{
+		cout << endl;
+		cout << "Enter the key for Decrypting the data ";
+		cin >> key;
+		dencrypted=decrption(encrypted, key);
+
+
+		cout << endl;
+		cout << "YOUR FILE HAS BEEN SUCCESSFULLY DECRYPTED ";
+		cout << endl;
+		ofstream myfile("decrypted_file.txt");
+		myfile << dencrypted;
+		myfile.close();
+
+
+	}
 	textof_file = space_remover(textof_file);
 
 	Sleep(5000);
